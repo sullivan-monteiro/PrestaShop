@@ -36,6 +36,7 @@ use PrestaShop\PrestaShop\Core\Domain\Module\Command\UninstallModuleCommand;
 use PrestaShop\PrestaShop\Core\Domain\Module\Command\BulkUninstallModuleCommand;
 use PrestaShop\PrestaShop\Core\Domain\Module\Command\ResetModuleCommand;
 use PrestaShop\PrestaShop\Core\Domain\Module\Command\InstallModuleCommand;
+use PrestaShop\PrestaShop\Core\Domain\Module\Command\DownloadModuleCommand;
 use PrestaShop\PrestaShop\Core\Domain\Module\Command\UpdateModuleStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Module\Exception\CannotResetModuleException;
 use PrestaShop\PrestaShop\Core\Domain\Module\Exception\AlreadyInstalledModuleException;
@@ -188,9 +189,9 @@ class ModuleFeatureContext extends AbstractDomainFeatureContext
     }
 
    /**
-    * @When I install module :technicalName from "folder"
+    * @When I install module :technicalName
     */
-    public function installModuleFromFolder(string $technicalName): void
+    public function installModule(string $technicalName): void
     {
         try{
             $this->getQueryBus()->handle(new InstallModuleCommand($technicalName));
@@ -202,9 +203,9 @@ class ModuleFeatureContext extends AbstractDomainFeatureContext
     }
 
    /**
-    * @When /^I install module "(.+)" from "(zip|url)" "(.+)"$/
+    * @When /^I download module "(.+)" from "(zip|url)" "(.+)"$/
     */
-    public function installModule(string $technicalName, string $sourceType, string $sourceGiven): void
+    public function downloadModule(string $technicalName, string $sourceType, string $sourceGiven): void
     {
         switch ($sourceType) {
             case 'zip':
@@ -218,7 +219,7 @@ class ModuleFeatureContext extends AbstractDomainFeatureContext
                 break;
         }
         try{
-            $this->getQueryBus()->handle(new InstallModuleCommand($technicalName, $source));
+            $this->getQueryBus()->handle(new DownloadModuleCommand($technicalName, $source));
         } catch (ModuleNotFoundException $e) {
             $this->setLastException($e);
         }

@@ -24,35 +24,11 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types=1);
+namespace PrestaShop\PrestaShop\Core\Domain\Module\CommandHandler;
 
-namespace PrestaShop\PrestaShop\Core\Domain\Module\Command;
+use PrestaShop\PrestaShop\Core\Domain\Module\Command\DownloadModuleCommand;
 
-use PrestaShop\PrestaShop\Core\Domain\Module\ValueObject\ModuleTechnicalName;
-
-/**
- * Install module
- */
-class InstallModuleCommand
+interface DownloadModuleHandlerInterface
 {
-    /**
-     * @var ModuleTechnicalName
-     */
-    private $technicalName;
-
-    /**
-     * @param string $technicalName Technical name for module
-     */
-    public function __construct(string $technicalName)
-    {
-        $this->technicalName = new ModuleTechnicalName($technicalName);
-    }
-
-    /**
-     * @return ModuleTechnicalName
-     */
-    public function getTechnicalName(): ModuleTechnicalName
-    {
-        return $this->technicalName;
-    }
+    public function handle(DownloadModuleCommand $command): void;
 }

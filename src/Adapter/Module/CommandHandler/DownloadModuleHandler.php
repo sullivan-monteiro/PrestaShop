@@ -27,14 +27,14 @@
 namespace PrestaShop\PrestaShop\Adapter\Module\CommandHandler;
 
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
-use PrestaShop\PrestaShop\Core\Domain\Module\Command\InstallModuleCommand;
-use PrestaShop\PrestaShop\Core\Domain\Module\CommandHandler\InstallModuleHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Module\Exception\CannotInstallModuleException;
+use PrestaShop\PrestaShop\Core\Domain\Module\Command\DownloadModuleCommand;
+use PrestaShop\PrestaShop\Core\Domain\Module\CommandHandler\DownloadModuleHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Module\Exception\CannotDownloadModuleException;
 use PrestaShop\PrestaShop\Core\Module\ModuleManager;
 use PrestaShop\PrestaShop\Core\Module\ModuleRepository;
 
 #[AsCommandHandler]
-class InstallModuleHandler implements InstallModuleHandlerInterface
+class DownloadModuleHandler implements DownloadModuleHandlerInterface
 {
     public function __construct(
         protected ModuleManager $moduleManager,
@@ -42,14 +42,15 @@ class InstallModuleHandler implements InstallModuleHandlerInterface
     ) {
     }
 
-    public function handle(InstallModuleCommand $command): void
+    public function handle(DownloadModuleCommand $command): void
     {
-        $technical_name = $command->getTechnicalName()->getValue();
+        try {
+            $technical_name = $command->getTechnicalName()->getValue();
+            $source = $command->getSource();
 
-        $result = $this->moduleManager->install($technical_name);
-
-        if (!$result) {
-            throw new CannotInstallModuleException('Technical error occurred while installing module.');
+            $this->moduleManager->download($technical_name, $source);
+        } catch (\Throwable $th) {
+            throw new CannotDownloadModuleException('Technical error occurred while downloading module.');
         }
     }
 }

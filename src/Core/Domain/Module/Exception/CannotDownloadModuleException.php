@@ -26,6 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Module\Exception;
 
-class CannotInstalledModuleException extends ModuleException
+class CannotDownloadModuleException extends ModuleException
 {
 }

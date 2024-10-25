@@ -31,9 +31,9 @@ namespace PrestaShop\PrestaShop\Core\Domain\Module\Command;
 use PrestaShop\PrestaShop\Core\Domain\Module\ValueObject\ModuleTechnicalName;
 
 /**
- * Install module
+ * Download module
  */
-class InstallModuleCommand
+class DownloadModuleCommand
 {
     /**
      * @var ModuleTechnicalName
@@ -41,11 +41,18 @@ class InstallModuleCommand
     private $technicalName;
 
     /**
-     * @param string $technicalName Technical name for module
+     * @var string | null
      */
-    public function __construct(string $technicalName)
+    private $source;
+
+    /**
+     * @param string $technicalName Technical name for module
+     * @param string $source source for module
+     */
+    public function __construct(string $technicalName, string $source=null)
     {
         $this->technicalName = new ModuleTechnicalName($technicalName);
+        $this->source = $source;
     }
 
     /**
@@ -54,5 +61,13 @@ class InstallModuleCommand
     public function getTechnicalName(): ModuleTechnicalName
     {
         return $this->technicalName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSource(): string | null
+    {
+        return $this->source;
     }
 }

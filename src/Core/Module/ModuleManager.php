@@ -90,6 +90,22 @@ class ModuleManager implements ModuleManagerInterface
         $this->hookManager = $hookManager;
     }
 
+    public function download(string $name, $source = null): void
+    {
+        if (!$this->adminModuleDataProvider->isAllowedAccess(__FUNCTION__)) {
+            throw new Exception($this->translator->trans(
+                'You are not allowed to download modules.',
+                [],
+                'Admin.Modules.Notification'
+            ));
+        }
+
+        if ($source !== null) {
+            $handler = $this->sourceFactory->getHandler($source);
+            $handler->handle($source);
+        }
+    }
+
     public function install(string $name, $source = null): bool
     {
         if (!$this->adminModuleDataProvider->isAllowedAccess(__FUNCTION__)) {
